@@ -53,8 +53,12 @@ static int cmd_info(char *args) {
 
   char *arg = strtok(NULL, " ");
 
-  if (strncmp(arg, "r", 1) == 0) {
+  if (strcmp(arg, "r") == 0) {
     isa_reg_display();
+    return 0;
+  }
+  if (strcmp(arg, "w") == 0) {
+    watchpoint_display();
     return 0;
   }
   return 0;
@@ -68,7 +72,7 @@ static int cmd_x(char *args) {
     word_t v = expr(args + strlen(arg) + 1, &success);
     if (success) {
       for (int i = 0; i < n; i++) {
-        printf("%u\n", vaddr_read(v + i * 4, 4));
+        printf("%x\t%u\n", v + i * 4, vaddr_read(v + i * 4, 4));
       }
     }
   }
@@ -100,6 +104,16 @@ static int cmd_w(char *args) {
   return 0;
 }
 
+static int cmd_d(char *args) {
+  if (args) {
+    int no;
+    if (scanf("%d", &no) == 1) {
+      delete_wp(no);
+    }
+  }
+  return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -113,6 +127,7 @@ static struct {
   { "x", "Print memory", cmd_x},
   { "p", "Calculate expression", cmd_p},
   { "w", "Calculate expression", cmd_w},
+  { "d", "Delete watchpoint", cmd_d},
 
   /* TODO: Add more commands */
 

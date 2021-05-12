@@ -13,6 +13,7 @@
 #undef DIFF_TEST
 #undef DEBUG
 #endif
+#define DEBUG
 
 /* You will define this macro in PA2 */
 //#define HAS_IOE
